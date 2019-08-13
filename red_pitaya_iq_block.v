@@ -68,16 +68,9 @@ module red_pitaya_iq_block #(
    input                 ren,
    output reg   		 ack,
 
-    
-
-   //ORIGINAL--vivek
    output reg [ 32-1: 0] rdata,
    input      [ 32-1: 0] wdata,
-   
-   //NEW-vivek
-   //output reg [ 64-1: 0] rdata,
-   //input      [ 64-1: 0] wdata,
-
+ 
 
    //vivek changed below
    input      [ 14-1: 0] shift_input
@@ -146,18 +139,8 @@ always @(posedge clk_i) begin
 		 // on was replaced by sync_i
 		 // if (addr==16'h100)   {cos_shifted_at_2f,sin_shifted_at_2f,cos_at_2f,sin_at_2f,pfd_on, on}   <= wdata[6-1:0];
 		 if (addr==16'h100)   {cos_shifted_at_2f,sin_shifted_at_2f,cos_at_2f,sin_at_2f,pfd_on} <= wdata[6-1:1];
-         
-         ///Jaeyoong Cho 2019_08_12 begin
-         //if (addr==16'h104)   shift_phase   <= wdata[(PHASEBITS)-1:0];
-         //if (addr==16'h128)   start_phase   <= wdata[(PHASEBITS)-1:0];
-
-         //original below 
          if (addr==16'h104)   start_phase   <= wdata[PHASEBITS-1:0];
          if (addr==16'h108)   shift_phase   <= wdata[PHASEBITS-1:0];
-         
-         //Jaeyoong Cho 2019_08_12 end
-         
-         
          if (addr==16'h10C)   output_select <= wdata[4-1:0];
          if (addr==16'h110)   g1 <= wdata[GAINBITS-1:0];
          if (addr==16'h114)   g2 <= wdata[GAINBITS-1:0];
@@ -173,15 +156,9 @@ always @(posedge clk_i) begin
 	  casez (addr)
 	     16'h100 : begin ack <= wen|ren; rdata <= {{32-6{1'b0}},cos_shifted_at_2f,sin_shifted_at_2f,cos_at_2f,sin_at_2f,pfd_on,on}; end
 	     16'h104 : begin ack <= wen|ren; rdata <= {{32-PHASEBITS{1'b0}},shift_phase}; end
-	     
-         
-         ////Jaeyoong Cho 2019_08_12 begin
-         //original
+
          16'h108 : begin ack <= wen|ren; rdata <= {{32-PHASEBITS{1'b0}},shift_phase}; end
-	     ////Jaeyoong Cho 2019_08_12 end
-         
-         
-         
+
          16'h10C : begin ack <= wen|ren; rdata <= {{32-4{1'b0}},output_select}; end
 	     16'h110 : begin ack <= wen|ren; rdata <= {{32-GAINBITS{1'b0}},g1}; end
 	     16'h114 : begin ack <= wen|ren; rdata <= {{32-GAINBITS{1'b0}},g2}; end
@@ -189,11 +166,7 @@ always @(posedge clk_i) begin
 	     16'h11C : begin ack <= wen|ren; rdata <= {{32-GAINBITS{1'b0}},g4}; end
 	     16'h120 : begin ack <= wen|ren; rdata <= input_filter; end
 	     16'h124 : begin ack <= wen|ren; rdata <= quadrature_filter; end
-	     
-         ////Jaeyoong Cho 2019_08_12 begin
-         //16'h128 : begin ack <= wen|ren; rdata <= {{32-PHASEBITS{1'b0}},start_phase}; end
-	     ////Jaeyoong Cho 2019_08_12 end
-                           
+	                       
          16'h130 : begin ack <= wen|ren; rdata <= na_averages; end
 	     16'h134 : begin ack <= wen|ren; rdata <= na_sleepcycles; end
          16'h140 : begin ack <= wen|ren; rdata <= {do_averaging,iq_i_sum[31-1:0]};end
