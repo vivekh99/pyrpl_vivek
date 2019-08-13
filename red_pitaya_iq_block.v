@@ -93,16 +93,9 @@ reg cos_at_2f; //flag to enable signals at twice the fundamental frequency
 reg sin_shifted_at_2f; //flag to enable signals at twice the fundamental frequency
 reg cos_shifted_at_2f; //flag to enable signals at twice the fundamental frequency
 
-//=========Jaeyoong Cho 20190812
-// function registers
-//reg [(PHASEBITS*2)-1:0] start_phase;
-//reg [(PHASEBITS*2)-1:0] shift_phase;
 
-//Original below
 reg [PHASEBITS-1:0] start_phase;
 reg [PHASEBITS-1:0] shift_phase;
-//=========Jaeyoong Cho 20190812
-
 
 reg signed [GAINBITS-1:0] g1;
 reg signed [GAINBITS-1:0] g2;
